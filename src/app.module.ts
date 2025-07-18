@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
+import { ProtectedController } from './protected/protected.controller';
 // importa otros controladores según necesites
 
 @Module({
   imports: [AuthModule],
-  controllers: [], // agrega aquí ProtectedController cuando lo crees
+  controllers: [ProtectedController], 
   providers: [],
 })
 export class AppModule {}
