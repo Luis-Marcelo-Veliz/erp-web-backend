@@ -1,3 +1,4 @@
 npm install -g @nestjs/cli
 nest --version
 npm init -y
+git pull --rebase origin main
