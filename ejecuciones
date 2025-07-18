@@ -1,0 +1,3 @@
+npm install -g @nestjs/cli
+nest --version
+npm init -y
