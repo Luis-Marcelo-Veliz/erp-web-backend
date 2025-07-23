@@ -1,29 +1,19 @@
+// src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // --- Parche de urgencia: middleware global para CORS ---
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    // Permite cualquier origen que venga en la petición (útil en dev)
-    res.header('Access-Control-Allow-Origin', req.header('Origin') || '*');
-    // Permite enviar credenciales (headers Authorization, cookies, etc.)
-    res.header('Access-Control-Allow-Credentials', 'true');
-    // Métodos permitidos
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-    // Cabeceras permitidas
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    // Si es preflight, devuelve 204 sin contenido
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(204);
-    }
-    next();
+  
+  // CORS definitivo en producción (ajusta orígenes según tu dominio)
+  app.enableCors({
+    origin: ['https://erp-web-frontend.vercel.app'],
+    credentials: true,
   });
 
-  await app.listen(3000);
-  console.log('🚀 Backend corriendo en http://localhost:3000');
+  // Usar el puerto de Render o 3000 por defecto
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`🚀 Backend corriendo en http://localhost:${port}`);
 }
-
 bootstrap();
