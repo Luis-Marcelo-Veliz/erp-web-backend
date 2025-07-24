@@ -7,12 +7,12 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      // En desarrollo, permitimos cualquier origen (Codespaces, localhost, etc.)
+      // En desarrollo, permitimos cualquier origen (Codespaces, Previews, localhost…)
       if (process.env.NODE_ENV !== 'production') {
         return callback(null, true);
       }
-      // En producción, solo permitimos el dominio fijo que quieras:
-      const allowed = process.env.FRONTEND_URL; // e.g. https://mi-erp.vercel.app
+      // En producción, solo permitimos el dominio fijo
+      const allowed = process.env.FRONTEND_URL;
       if (origin && origin === allowed) {
         return callback(null, true);
       }
