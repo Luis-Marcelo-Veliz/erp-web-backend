@@ -1,31 +1,35 @@
 // src/auth/auth.service.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  async login(username: string, password: string) {
+  async login(username: string, password: string): Promise<{ accessToken: string }> {
     try {
       console.log('AuthService.login recibidos:', { username, password });
 
-      // Aquí tu lógica real; de momento, sigue siendo el admin hardcodeado:
+      // Lógica de validación (puedes sustituir por la tuya real)
       if (username !== 'admin' || password !== '1234') {
         console.log('Credenciales inválidas');
-        // Lanzamos con mensaje para que el front lo reciba en body.message
+        // Este mensaje llega al front como body.message
         throw new UnauthorizedException('Credenciales inválidas');
       }
 
+      // Si pasó la validación, generamos el token
       const payload = { username, sub: 1, role: 'admin' };
       const token = this.jwtService.sign(payload);
       console.log('Emitiendo token:', token);
+
+      // Devolvemos exactamente lo que el front espera
       return { accessToken: token };
     } catch (err) {
-      // Mostramos el error completo en consola para no quedarnos en la oscuridad
+      // Log completo para ver si hay otros errores internos
       console.error('🔥 Error en AuthService.login:', err);
-      // Si es UnauthorizedException, lo relanzamos para que NestJS devuelva 401.
-      // Si es cualquier otra cosa, lo dejamos caer (500), pero ya con stack.
       throw err;
     }
   }
