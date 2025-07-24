@@ -7,15 +7,23 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      // En desarrollo, permitimos cualquier origen (Codespaces, Previews, localhost…)
-      if (process.env.NODE_ENV !== 'production') {
+      // 1) Si no hay origin (curl, Postman...), lo permitimos
+      if (!origin) return callback(null, true);
+
+      // 2) En desarrollo, cualquier preview de GitHub Codespaces
+      if (origin.endsWith('.app.github.dev')) {
         return callback(null, true);
       }
-      // En producción, solo permitimos el dominio fijo
-      const allowed = process.env.FRONTEND_URL;
-      if (origin && origin === allowed) {
-        return callback(null, true);
+
+      // 3) En producción, permitir solo tu dominio real
+      if (process.env.NODE_ENV === 'production') {
+        const allowed = process.env.FRONTEND_URL; 
+        if (origin === allowed) {
+          return callback(null, true);
+        }
       }
+
+      // 4) En cualquier otro caso, denegar
       callback(new Error('CORS not allowed'), false);
     },
     credentials: true,
