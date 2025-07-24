@@ -7,12 +7,13 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      // Sin origin (curl) o prod, permitimos prod
-      if (!origin || origin === process.env.FRONTEND_URL) {
+      // En desarrollo, permitimos cualquier origen (Codespaces, localhost, etc.)
+      if (process.env.NODE_ENV !== 'production') {
         return callback(null, true);
       }
-      // En dev, permitimos todo
-      if (process.env.NODE_ENV !== 'production') {
+      // En producción, solo permitimos el dominio fijo que quieras:
+      const allowed = process.env.FRONTEND_URL; // e.g. https://mi-erp.vercel.app
+      if (origin && origin === allowed) {
         return callback(null, true);
       }
       callback(new Error('CORS not allowed'), false);
@@ -20,7 +21,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const port = parseInt(process.env.PORT) || 3000;
+  const port = parseInt(process.env.PORT, 10) || 3000;
   await app.listen(port);
   console.log(`🚀 Backend corriendo en http://localhost:${port}`);
 }
