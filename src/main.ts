@@ -28,6 +28,7 @@ async function bootstrap() {
   const port = parseInt(process.env.PORT || '3000', 10);
 
   // 2) Escuchar en todas las interfaces, no solo en localhost
+  console.log('⚙  Configuración de red:', { port, host: '0.0.0.0' });
   await app.listen(port, '0.0.0.0');
   console.log(`🚀 Backend corriendo en http://0.0.0.0:${port}  [NODE_ENV=${process.env.NODE_ENV}]`);
 }
