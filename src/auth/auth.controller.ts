@@ -12,13 +12,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  // Devolvemos siempre 200 si las credenciales son correctas,
-  // o 401 si no lo son.
-  @HttpCode(HttpStatus.OK)
-  async login(
-    @Body() dto: { username: string; password: string },
-  ): Promise<{ accessToken: string }> {
-    // Si lanza UnauthorizedException, Nest devolverá 401 con { message }
-    return this.authService.login(dto.username, dto.password);
+  login(@Body() body: { username: string; password: string }) {
+    return this.authService.login(body.username, body.password);
   }
 }
