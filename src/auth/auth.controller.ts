@@ -12,7 +12,14 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  login(@Body() body: { username: string; password: string }) {
-    return this.authService.login(body.username, body.password);
+  async login(@Body() dto: { username: string; password: string }) {
+    try {
+      return await this.authService.login(dto.username, dto.password);
+    } catch (err) {
+      console.error('🔥 Error en AuthController.login:', err.stack || err);
+      // Devuelve un mensaje genérico sin exponer stack al cliente
+      throw new HttpException(
+        { message: 'Error interno en login' },
+        HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
