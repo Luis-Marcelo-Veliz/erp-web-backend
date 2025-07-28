@@ -2,6 +2,7 @@ npm install -g @nestjs/cli
 nest --version
 npm init -y
 git pull --rebase origin main
+NestJS es mi backend y Next.js es mi frontend
 npm run dev --para arrancar el front
 npm run start:dev --para arrancar el back
 
